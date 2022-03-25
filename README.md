@@ -1,9 +1,9 @@
 # X-Trans2Cap
-**[CVPR2022]** X -Trans2Cap: Cross-Modal Knowledge Transfer using Transformer for 3D Dense Captioning [[Arxiv Paper]](https://arxiv.org/abs/2203.00843)
+**[CVPR2022]** X-Trans2Cap: Cross-Modal Knowledge Transfer using Transformer for 3D Dense Captioning [[Arxiv Paper]](https://arxiv.org/abs/2203.00843)
 
 ![](figures/pipeline.png)
 
-Code will be released soon.
+Code is partially released, we are working on it.
 
 If you find our work useful in your research, please consider citing:
 ```bibtex
