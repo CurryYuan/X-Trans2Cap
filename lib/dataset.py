@@ -37,7 +37,7 @@ class Dataset(ReferenceDataset):
 
         # fliter
         self.scene_objects = self._get_scene_objects(self.scanrefer)
-        self.data_2d = np.load('/mntnfs/med_data2/yuanzhihao/2d_feature_agg.npz', allow_pickle=True)
+        self.data_2d = np.load(CONF.PATH.DATA_2D, allow_pickle=True)
         self.data_2d = self.data_2d['arr_0'].item()
 
     def __len__(self):

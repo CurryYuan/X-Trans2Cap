@@ -23,21 +23,7 @@ CONF.PATH.SCANNET_SCANS = os.path.join(CONF.PATH.SCANNET, "scans")
 CONF.PATH.SCANNET_META = os.path.join(CONF.PATH.SCANNET, "meta_data")
 CONF.PATH.SCANNET_DATA = os.path.join(CONF.PATH.SCANNET, "scannet_data")
 
-# Scan2CAD
-CONF.PATH.SCAN2CAD = os.path.join(CONF.PATH.DATA, "Scan2CAD_dataset")  # TODO change this
-
 # data
-CONF.SCANNET_DIR = "/canis/Datasets/ScanNet/public/v2/scans"  # TODO change this
-CONF.SCANNET_FRAMES_ROOT = "/mntntfs/med_data1/yuanzhihao/scannet/scannet_frames_25k"  # TODO change this
-CONF.PROJECTION = "/mntntfs/med_data1/yuanzhihao/Scan2Cap/multiview_projection_scanrefer"  # TODO change this
-CONF.ENET_FEATURES_ROOT = "/mntntfs/med_data1/yuanzhihao/scannet/enet_features"  # TODO change this
-CONF.ENET_FEATURES_SUBROOT = os.path.join(CONF.ENET_FEATURES_ROOT, "{}")  # scene_id
-CONF.ENET_FEATURES_PATH = os.path.join(CONF.ENET_FEATURES_SUBROOT, "{}.npy")  # frame_id
-CONF.SCANNET_FRAMES = os.path.join(CONF.SCANNET_FRAMES_ROOT, "{}/{}")  # scene_id, mode
-# CONF.SCENE_NAMES = sorted(os.listdir(CONF.SCANNET_DIR))
-CONF.ENET_WEIGHTS = os.path.join(CONF.PATH.BASE, "data/scannetv2_enet.pth")
-# CONF.MULTIVIEW = os.path.join(CONF.PATH.SCANNET_DATA, "enet_feats.hdf5")
-CONF.MULTIVIEW = os.path.join('/data/yuanzhihao', "enet_feats_maxpool.hdf5")
 CONF.NYU40_LABELS = os.path.join(CONF.PATH.SCANNET_META, "nyu40_labels.csv")
 
 # scannet
@@ -52,10 +38,6 @@ CONF.PATH.OUTPUT = os.path.join(CONF.PATH.BASE, "outputs")
 # pretrained
 CONF.PATH.PRETRAINED = os.path.join(CONF.PATH.BASE, "pretrained")
 
-# Pretrained features
-CONF.PATH.GT_FEATURES = os.path.join(CONF.PATH.CLUSTER, "gt_{}_features")  # dataset
-# CONF.PATH.VOTENET_FEATURES = os.path.join(CONF.PATH.CLUSTER, "votenet_features")
-CONF.PATH.VOTENET_FEATURES = os.path.join(CONF.PATH.CLUSTER, "votenet_{}_predictions")  # dataset
 
 # train
 CONF.TRAIN = EasyDict()
@@ -74,3 +56,4 @@ CONF.SCANNET_V2_TSV = os.path.join(CONF.PATH.SCANNET_META, "scannetv2-labels.com
 CONF.VOCAB = os.path.join(CONF.PATH.DATA, "{}_vocabulary.json")  # dataset_name
 CONF.GLOVE_PICKLE = os.path.join(CONF.PATH.DATA, "glove.p")
 CONF.VOCAB_WEIGHTS = os.path.join(CONF.PATH.DATA, "{}_vocabulary_weights.json")  # dataset_name
+CONF.PATH.DATA_2D = os.path.join(CONF.PATH.DATA, "2d_feature_agg.npz")  # processed 2D features

@@ -10,11 +10,7 @@ data/votenet_estimated_viewpoint*
 data/nr3d*
 
 # cache
-data/scannet/__pycache__
-lib/__pycache__
-lib/pointnet2/__pycache__
-models/__pycache__
-utils/__pycache__
+__pycache__/
 
 # pointnet2
 lib/pointnet2/build/
@@ -53,7 +49,6 @@ viewer/server/static/ScanNetv1/scans
 viewer/server/static/ScanNetv2/scans
 viewer/server/static/ScanNetv2/ScanNet_objects
 pretrained_bbox/
-scripts/__pycache__/
 
 # Mac
 .DS_Store

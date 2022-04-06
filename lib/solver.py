@@ -9,7 +9,7 @@ import time
 import torch
 import numpy as np
 from tqdm import tqdm
-from torch.utils.tensorboard import SummaryWriter
+from tensorboardX import SummaryWriter
 from torch.optim.lr_scheduler import StepLR, MultiStepLR
 
 from lib.config import CONF

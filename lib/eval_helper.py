@@ -298,7 +298,7 @@ def eval_cap(mode, model, dataset, dataloader, phase, folder, use_tf=False, max_
 
     if dataset.name == 'ScanRefer':
         SCANREFER = json.load(open(os.path.join(CONF.PATH.DATA, "ScanRefer_filtered.json")))
-        SCANREFER_ORGANIZED = json.load(open(os.path.join(CONF.PATH.DATA, "ScanRefer_filtered_organized.json")))
+        SCANREFER_ORGANIZED = json.load(open(os.path.join(CONF.PATH.DATA, "ScanRefer_organized.json")))
     elif dataset.name == 'Nr3d':
         SCANREFER = json.load(open(os.path.join(CONF.PATH.DATA, "nr3d.json")))
         SCANREFER_ORGANIZED = json.load(open(os.path.join(CONF.PATH.DATA, "nr3d_organized.json")))
