@@ -105,84 +105,14 @@ def radian_to_label(radians, num_bins=6):
     return labels
 
 
-def compute_node_orientation_loss(data_dict, num_bins=6):
-    center = data_dict["bbox_center"]
-    center_label = data_dict["bbox_center_label"]
-    _, object_assignment, _, _ = nn_distance(center, center_label)
-
-    edge_indices = data_dict["edge_index"]
-    edge_preds = data_dict["edge_orientations"]
-    num_sources = data_dict["num_edge_source"]
-    num_targets = data_dict["num_edge_target"]
-    batch_size, num_proposals = object_assignment.shape
-
-    object_rotation_matrices = torch.gather(
-        data_dict["scene_object_rotations"],
-        1,
-        object_assignment.view(batch_size, num_proposals, 1, 1).repeat(1, 1, 3, 3)
-    )  # batch_size, num_proposals, 3, 3
-    object_rotation_masks = torch.gather(
-        data_dict["scene_object_rotation_masks"],
-        1,
-        object_assignment
-    )  # batch_size, num_proposals
-
-    preds = []
-    labels = []
-    masks = []
-    for batch_id in range(batch_size):
-        batch_rotations = object_rotation_matrices[batch_id]  # num_proposals, 3, 3
-        batch_rotation_masks = object_rotation_masks[batch_id]  # num_proposals
-
-        batch_num_sources = num_sources[batch_id]
-        batch_num_targets = num_targets[batch_id]
-        batch_edge_indices = edge_indices[batch_id, :batch_num_sources * batch_num_targets]
-
-        source_indices = edge_indices[batch_id, 0, :batch_num_sources * batch_num_targets].long()
-        target_indices = edge_indices[batch_id, 1, :batch_num_sources * batch_num_targets].long()
-
-        source_rot = torch.index_select(batch_rotations, 0, source_indices)
-        target_rot = torch.index_select(batch_rotations, 0, target_indices)
-
-        relative_rot = torch.matmul(source_rot, target_rot.transpose(2, 1))
-        relative_rot = torch.acos(
-            torch.clamp(0.5 * (torch.diagonal(relative_rot, dim1=-2, dim2=-1).sum(-1) - 1), -1, 1))
-        assert torch.isfinite(relative_rot).sum() == source_indices.shape[0]
-
-        source_masks = torch.index_select(batch_rotation_masks, 0, source_indices)
-        target_masks = torch.index_select(batch_rotation_masks, 0, target_indices)
-        batch_edge_masks = source_masks * target_masks
-
-        batch_edge_labels = radian_to_label(relative_rot, num_bins)
-        batch_edge_preds = edge_preds[batch_id, :batch_num_sources * batch_num_targets]
-
-        preds.append(batch_edge_preds)
-        labels.append(batch_edge_labels)
-        masks.append(batch_edge_masks)
-
-    # aggregate
-    preds = torch.cat(preds, dim=0)
-    labels = torch.cat(labels, dim=0)
-    masks = torch.cat(masks, dim=0)
-
-    criterion = nn.CrossEntropyLoss(reduction="none")
-    loss = criterion(preds, labels)
-    loss = (loss * masks).sum() / (masks.sum() + 1e-8)
-
-    preds = preds.argmax(-1)
-    acc = (preds[masks == 1] == labels[masks == 1]).sum().float() / (masks.sum().float() + 1e-8)
-
-    return loss, acc
-
-
-def get_loss(data_dict, mode="gt", orientation=False, num_bins=CONF.TRAIN.NUM_BINS, caption=True):
+def get_loss(data_dict, mode="gt", use_rl=False):
     """ Loss functions
     Returns:
         loss: pytorch scalar tensor
         data_dict: dict
     """
 
-    if caption:
+    if not use_rl:
         cap_loss, cap_acc = compute_cap_loss(data_dict, mode)
 
         # store
@@ -192,21 +122,8 @@ def get_loss(data_dict, mode="gt", orientation=False, num_bins=CONF.TRAIN.NUM_BI
         # store
         data_dict["cap_acc"] = torch.zeros(1)[0].cuda()
 
-    if orientation:
-        ori_loss, ori_acc = compute_node_orientation_loss(data_dict, num_bins)
-
-        # store
-        data_dict["ori_loss"] = ori_loss
-        data_dict["ori_acc"] = ori_acc
-    else:
-        # store
-        data_dict["ori_loss"] = torch.zeros(1)[0].cuda()
-        data_dict["ori_acc"] = torch.zeros(1)[0].cuda()
-
     # Final loss function
     loss = data_dict["cap_loss"]
-    if orientation:
-        loss += 0.1 * data_dict["ori_loss"]
 
     # loss *= 10 # amplify
 
@@ -216,12 +133,6 @@ def get_loss(data_dict, mode="gt", orientation=False, num_bins=CONF.TRAIN.NUM_BI
         kd_loss = 0
         data_dict['kd_loss'] = torch.zeros(1)[0].cuda()
 
-    if 'co_loss' in data_dict:
-        co_loss = data_dict['co_loss']
-    else:
-        co_loss = 0
-        data_dict['co_loss'] = torch.zeros(1)[0].cuda()
-
-    data_dict["loss"] = loss + kd_loss + co_loss
+    data_dict["loss"] = loss + kd_loss
 
     return data_dict

@@ -3,7 +3,7 @@
 
 ![](figures/pipeline.png)
 
-Code is partially released, we are working on it.
+## Citation
 
 If you find our work useful in your research, please consider citing:
 ```bibtex
@@ -14,6 +14,26 @@ If you find our work useful in your research, please consider citing:
   year={2022}
 }
 ```
+
+## Prerequisites
+* Python 3.6.9 (e.g., conda create -n xtrans_env python=3.6.9)
+* Pytorch 1.7.1 (e.g., conda install pytorch==1.7.1 cudatoolkit=11.0 -c pytorch)
+* Install other common packages (numpy, [transformers](https://huggingface.co/docs/transformers/index), etc.)
+
+## Installation
+- Clone the repository
+
+    ```
+    git clone https://github.com/CurryYuan/X-Trans2Cap.git
+    cd SAT
+    ```
+
+- To use a PointNet++ visual-encoder you need to compile its CUDA layers for [PointNet++](http://arxiv.org/abs/1706.02413):
+```Note: To do this compilation also need: gcc5.4 or later.```
+    ```
+    cd lib/pointnet2
+    python setup.py install
+    ```
 
 ## Data
 
@@ -43,5 +63,10 @@ Change the data path in `lib/config.py`.
 Run this command to train the model:
 
 ```bash
-python train.py --config config/xtrans_scanrefer.yaml
+python scripts/train.py --config config/xtrans_scanrefer.yaml
+```
+
+Run CIDEr optimization:
+```bash
+python scripts/train.py --config config/xtrans_scanrefer_rl.yaml
 ```

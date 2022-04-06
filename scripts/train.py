@@ -56,9 +56,9 @@ def get_solver(args, dataset, dataloader):
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.wd)
 
-    # model_name = "model.pth"  
-    # model_path = os.path.join(CONF.PATH.OUTPUT, 'scanrefer_xtrans', model_name)  # gt_ins_dual scanrefer_transcap_kd
-    # model.load_state_dict(torch.load(model_path), strict=True)
+    if args.use_rl:
+        model_path = os.path.join(CONF.PATH.OUTPUT, args.pretrained_path, "model.pth")
+        model.load_state_dict(torch.load(model_path), strict=True)
 
     if args.use_checkpoint:
         print("loading checkpoint {}...".format(args.use_checkpoint))
@@ -90,7 +90,7 @@ def get_solver(args, dataset, dataloader):
         stamp=stamp,
         val_step=args.val_step,
         use_tf=args.use_tf,
-        use_orientation=args.use_orientation,
+        use_rl=args.use_rl,
         lr_decay_step=LR_DECAY_STEP,
         lr_decay_rate=LR_DECAY_RATE,
         bn_decay_step=BN_DECAY_STEP,

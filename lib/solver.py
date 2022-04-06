@@ -23,10 +23,7 @@ ITER_REPORT_TEMPLATE = """
 [loss] train_loss: {train_loss}
 [loss] train_cap_loss: {train_cap_loss}
 [loss] train_kd_loss: {train_kd_loss}
-[loss] train_co_loss: {train_co_loss}
-[loss] train_ori_loss: {train_ori_loss}
 [sco.] train_cap_acc: {train_cap_acc}
-[sco.] train_ori_acc: {train_ori_acc}
 [info] mean_fetch_time: {mean_fetch_time}s
 [info] mean_forward_time: {mean_forward_time}s
 [info] mean_backward_time: {mean_backward_time}s
@@ -61,7 +58,7 @@ BEST_REPORT_TEMPLATE = """
 
 class Solver():
     def __init__(self, mode, model, config, dataset, dataloader, optimizer, stamp, val_step=10,
-                 use_tf=True, use_orientation=False,
+                 use_tf=True, use_rl=False,
                  lr_decay_step=None, lr_decay_rate=None, bn_decay_step=None, bn_decay_rate=None,
                  criterion="meteor"):
 
@@ -78,7 +75,7 @@ class Solver():
         self.val_step = val_step
 
         self.use_tf = use_tf
-        self.use_orientation = use_orientation
+        self.use_rl = use_rl
 
         self.lr_decay_step = lr_decay_step
         self.lr_decay_rate = lr_decay_rate
@@ -206,11 +203,8 @@ class Solver():
                 "loss": [],
                 "cap_loss": [],
                 'kd_loss': [],
-                'co_loss': [],
-                "ori_loss": [],
                 # scores (float, not torch.cuda.FloatTensor)
                 "cap_acc": [],
-                "ori_acc": [],
                 # for eval
                 "bleu-1": [],
                 "bleu-2": [],
@@ -234,8 +228,8 @@ class Solver():
     def _dump_log(self, phase, is_eval=False):
         if phase == "train" and not is_eval:
             log = {
-                "loss": ["loss", "cap_loss", 'kd_loss', 'co_loss', "ori_loss"],
-                "score": ["cap_acc", "ori_acc"]
+                "loss": ["loss", "cap_loss", 'kd_loss'],
+                "score": ["cap_acc"]
             }
             for key in log:
                 for item in log[key]:
@@ -277,18 +271,15 @@ class Solver():
         self.optimizer.step()
 
     def _compute_loss(self, data_dict):
-        data_dict = get_loss(data_dict=data_dict, mode=self.mode, orientation=self.use_orientation)
+        data_dict = get_loss(data_dict=data_dict, mode=self.mode, use_rl=self.use_rl)
 
         # store loss
         self._running_log["cap_loss"] = data_dict["cap_loss"]
         self._running_log["kd_loss"] = data_dict["kd_loss"]
-        self._running_log["co_loss"] = data_dict["co_loss"]
-        self._running_log["ori_loss"] = data_dict["ori_loss"]
         self._running_log["loss"] = data_dict["loss"]
 
         # store eval
         self._running_log["cap_acc"] = data_dict["cap_acc"].item()
-        self._running_log["ori_acc"] = data_dict["ori_acc"].item()
 
     def _eval(self, phase):
         bleu, cider, rouge, meteor = eval_cap(
@@ -334,8 +325,6 @@ class Solver():
                     "loss": 0,
                     "cap_loss": 0,
                     'kd_loss': 0,
-                    'co_loss': 0,
-                    "ori_loss": 0,
                     # acc
                     "cap_acc": 0,
                     "cap_acc": 0,
@@ -367,11 +356,7 @@ class Solver():
                 self.log[phase]["loss"].append(self._running_log["loss"].item())
                 self.log[phase]["cap_loss"].append(self._running_log["cap_loss"].item())
                 self.log[phase]["kd_loss"].append(self._running_log["kd_loss"].item())
-                self.log[phase]["co_loss"].append(self._running_log["co_loss"].item())
-                self.log[phase]["ori_loss"].append(self._running_log["ori_loss"].item())
-
                 self.log[phase]["cap_acc"].append(self._running_log["cap_acc"])
-                self.log[phase]["ori_acc"].append(self._running_log["ori_acc"])
 
                 # report
                 if phase == "train":
@@ -482,10 +467,7 @@ class Solver():
             train_loss=round(np.mean([v for v in self.log["train"]["loss"]]), 5),
             train_cap_loss=round(np.mean([v for v in self.log["train"]["cap_loss"]]), 5),
             train_kd_loss=round(np.mean([v for v in self.log["train"]["kd_loss"]]), 5),
-            train_co_loss=round(np.mean([v for v in self.log["train"]["co_loss"]]), 5),
-            train_ori_loss=round(np.mean([v for v in self.log["train"]["ori_loss"]]), 5),
             train_cap_acc=round(np.mean([v for v in self.log["train"]["cap_acc"]]), 5),
-            train_ori_acc=round(np.mean([v for v in self.log["train"]["ori_acc"]]), 5),
             mean_fetch_time=round(np.mean(fetch_time), 5),
             mean_forward_time=round(np.mean(forward_time), 5),
             mean_backward_time=round(np.mean(backward_time), 5),

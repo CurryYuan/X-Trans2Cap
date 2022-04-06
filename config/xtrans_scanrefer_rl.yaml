@@ -1,0 +1,23 @@
+GENERAL:
+  tag: scanrefer_xtrans_rl
+  model: xtrans
+  dataset: ScanRefer
+  dataloader: dataset
+  detection: False
+  use_gt_ins: True
+  mode: gt
+  use_tf: True
+  num_proposals: 64
+  use_rl: True
+  pretrained_path: scanrefer_xtrans
+
+DATA:
+  use_color: True
+  num_points: 40000
+
+TRAIN:
+  batch_size: 32
+  epoch: 5
+  use_pretrain: False
+  lr: 0.00001
+

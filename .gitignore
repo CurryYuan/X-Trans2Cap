@@ -57,3 +57,4 @@ data/.DS_Store
 # IDE
 .vscode
 .idea
+data/2d_feature_agg.npz

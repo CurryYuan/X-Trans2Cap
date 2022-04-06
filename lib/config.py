@@ -35,10 +35,6 @@ CONF.SCANNETV2_LIST = os.path.join(CONF.PATH.SCANNET_META, "scannetv2.txt")
 # output
 CONF.PATH.OUTPUT = os.path.join(CONF.PATH.BASE, "outputs")
 
-# pretrained
-CONF.PATH.PRETRAINED = os.path.join(CONF.PATH.BASE, "pretrained")
-
-
 # train
 CONF.TRAIN = EasyDict()
 CONF.TRAIN.MAX_DES_LEN = 30
