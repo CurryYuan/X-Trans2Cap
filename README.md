@@ -70,3 +70,11 @@ Run CIDEr optimization:
 ```bash
 python scripts/train.py --config config/xtrans_scanrefer_rl.yaml
 ```
+
+Our code also support training on Nr3D/Sr3D dataset. Please organize data as ScanRefer, and change the argument `dataset` in config file.
+
+## Evaluation
+
+```bash
+python scripts/eval.py --config config/xtrans_scanrefer.yaml --use_pretrained xtrans_scanrefer_rl --force
+```

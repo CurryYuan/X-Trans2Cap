@@ -1,5 +1,5 @@
 GENERAL:
-  tag: scanrefer_xtrans
+  tag: xtrans_scanrefer
   model: xtrans
   dataset: ScanRefer
   dataloader: dataset
