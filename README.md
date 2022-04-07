@@ -1,6 +1,7 @@
 # X-Trans2Cap
 **[CVPR2022]** X-Trans2Cap: Cross-Modal Knowledge Transfer using Transformer for 3D Dense Captioning [[Arxiv Paper]](https://arxiv.org/abs/2203.00843)
 
+Zhihao Yuan, [Xu Yan](https://github.com/yanx27), Yinghong Liao, Yao Guo, Guanbin Li, Shuguang Cui, [Zhen Li*](https://mypage.cuhk.edu.cn/academics/lizhen/)
 ![](figures/pipeline.png)
 
 ## Citation
@@ -25,7 +26,6 @@ If you find our work useful in your research, please consider citing:
 
     ```
     git clone https://github.com/CurryYuan/X-Trans2Cap.git
-    cd SAT
     ```
 
 - To use a PointNet++ visual-encoder you need to compile its CUDA layers for [PointNet++](http://arxiv.org/abs/1706.02413):
