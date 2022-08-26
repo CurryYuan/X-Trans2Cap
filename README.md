@@ -8,11 +8,13 @@ Zhihao Yuan, [Xu Yan](https://github.com/yanx27), Yinghong Liao, Yao Guo, Guanbi
 
 If you find our work useful in your research, please consider citing:
 ```bibtex
-@inproceedings{yuan2022x,
-  title={X-Trans2Cap: Cross-Modal Knowledge Transfer using Transformer for 3D Dense Captioning},
-  author={Yuan, Zhihao and Yan, Xu and Liao, Yinghong and Guo, Yao and Li, Guanbin and Li, Zhen and Cui, Shuguang},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  year={2022}
+@InProceedings{Yuan_2022_CVPR,
+    author    = {Yuan, Zhihao and Yan, Xu and Liao, Yinghong and Guo, Yao and Li, Guanbin and Cui, Shuguang and Li, Zhen},
+    title     = {X-Trans2Cap: Cross-Modal Knowledge Transfer Using Transformer for 3D Dense Captioning},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2022},
+    pages     = {8563-8573}
 }
 ```
 
